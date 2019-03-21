@@ -5,7 +5,7 @@ def isfloat(x):
     s = x.partition(".")
     if s[1]=='.':
         if s[0]=='' or s[0]=='-':
-            if s[2]=='':
+            if s[2]=='' or s[2][0]=='-':
                 return False
             else:
                 return isinteger(s[2])
