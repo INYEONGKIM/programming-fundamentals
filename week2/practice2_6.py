@@ -10,7 +10,10 @@ def isfloat(x):
             else:
                 return isinteger(s[2])
         elif isinteger(s[0]):
-            return (s[2]=='' or isinteger(s[2])) and not s[2][0]=='-'
+            if s[2]!='' and s[2][0]=='-':
+                return False
+
+            return s[2]=='' or isinteger(s[2])
         else:
             return False
     else:
@@ -26,3 +29,5 @@ print(isfloat("-777.0"))
 print(isfloat("-777."))
 print(isfloat("."))
 print(isfloat(".."))
+print(isfloat("-21.-1"))
+print(isfloat("-.-1"))
