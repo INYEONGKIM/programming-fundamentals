@@ -10,7 +10,7 @@ def isfloat(x):
             else:
                 return isinteger(s[2])
         elif isinteger(s[0]):
-            return s[2]=='' or isinteger(s[2])
+            return (s[2]=='' or isinteger(s[2])) and not s[2][0]=='-'
         else:
             return False
     else:
