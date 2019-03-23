@@ -1,4 +1,12 @@
+def isleapyear(year):
+    if year >= 20:
+        year += 1900;
+    else:
+        year += 2000;
+    return year%4==0 and not(year%100==0 and not(year%400==0))
+
 def front_ok(s):
+    year = int(s[0:2])
     month = int(s[2:4])
     day = int(s[4:])
 
@@ -6,7 +14,10 @@ def front_ok(s):
         return False
     else:
         if month==2:
-            return day<29
+            if isleapyear(year):
+                return day<30
+            else:
+                return day<29
         elif month==1 or month==3 or month==5 or month==7 or month==8 or month==10 or month==12:
             return day<32
         else:
