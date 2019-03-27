@@ -10,7 +10,7 @@ def front_ok(s):
     month = int(s[2:4])
     day = int(s[4:])
 
-    if month>12 or day>31:
+    if month<0 or day<0 or month>12 or day>31:
         return False
     else:
         if month==2:
