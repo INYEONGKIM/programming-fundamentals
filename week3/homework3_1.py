@@ -4,7 +4,7 @@ def square(n):
             return 2*n-1 + loop(n-1)
         else:
             return 0
-    return loop(abs(n)) # 음수를 처리하려면 이 부분을 손봐야 한다.
+    return loop(abs(n))
 
 def square(n):
     def loop(n, res):
