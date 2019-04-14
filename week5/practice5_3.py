@@ -5,22 +5,17 @@ def findAllNCount(filename,key):
     position = text.find(key)
     count = 0
     if position==-1:
-        outfile.write(key+" is not found.")
-        print("Done")
+        outfile.write(key+" is not found")
     else:
-        outfile.write("at ")
         while 0<position<len(text):
             count+=1
-            outfile.write(str(position))
             position=text.find(key, position+len(key))
-            if position==-1:
-                outfile.write(".\n")
-            else:
-                outfile.write(", ")
-        outfile.write(key + " is found " + str(count) + " times.")
+        if count==1:
+            outfile.write(key + " is found " + str(count) + " time.")
+        else:
+            outfile.write(key + " is found " + str(count) + " times.")
     outfile.close()
     infile.close()
-    print("Done")
 
 
 # findAllNCount('article.txt','computer') # computer is found 6 times.
