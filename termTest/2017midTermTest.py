@@ -328,6 +328,7 @@ def sublist(s,low,high):
     if high < 0: high = 0
     if low <= high:
         return take_before(drop_before(s, low), high-low)
+        # return drop_before(take_before(s,high), low)
     else:
         return []
 # s = [1,2,3,4,5]
@@ -410,6 +411,37 @@ def longest_streak2(s):
         index += 1
 
     return res
+# def longest_streak2(s):
+#     contender = s[0]
+#     streak_length = streak_record = 1
+#     i=0
+#     for n in s[1:]:
+#         if n == contender:
+#             streak_length += 1
+#         else:
+#             contender = n
+#             streak_length = 1
+#         if streak_length > streak_record:
+#             streak_record = streak_length
+#         i += 1
+# 
+#     start = 0
+#     i = 0
+#     res = []
+#     for n in s[1:]:
+#         if n == contender:
+#             if streak_length == 1:
+#                 start = i
+#             streak_length += 1
+#         else:
+#             contender = n
+#             streak_length = 1
+#         if streak_length == streak_record:
+#             res.append((contender, streak_length, start))
+#         i += 1
+# 
+#     return res
+
 
 def test_longest_streak(s):
     for n in s:
