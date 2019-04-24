@@ -117,18 +117,17 @@ def days_in_month(year, month):
 
 def date_plus(year, month, day, days):
     days_left = days_in_month(year,month) - day
-    if days_left < days:
-        days -= days_left                               # set day
-        (year, month) = next_month(year, month)         # month++ and year++
-        days_this_month = days_in_month(year, month)    # new left days
-
-        while days_this_month < days:
-            days -= days_this_month
-            (year, month) = next_month(year, month)
-            days_this_month = days_in_month(year,month)
-        return (year, month, days)
+    if days <= days_left:
+        return (year, month, day+days)
     else:
-        return (year, month, day + days)
+        day = days - days_left
+        year, month = next_month(year, month)
+
+        while days_in_month(year, month) < day:
+            day -= days_in_month(year, month)
+            year, month = next_month(year, month)
+
+        return (year, month, day)
 
 # print(date_plus(2017,4,20,2)) # => (2017, 4, 22)
 # print(date_plus(2017,4,20,7)) # => (2017, 4, 27)
