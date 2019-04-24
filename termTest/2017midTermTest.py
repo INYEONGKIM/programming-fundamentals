@@ -275,6 +275,14 @@ def drop_before(s,index):
 #         return s
 #     else:
 #         return take_before(s[:index], index+1)
+
+# def take_before(s,index):
+#     if s != [] and index < len(s):
+#         return take_before(s[:index], index+1)
+#     else:
+#         return s
+
+
 # def take_before(s,index):
 #     if s != [] and index > 0:
 #         return [s[0]] + take_before(s[1:],index-1)
