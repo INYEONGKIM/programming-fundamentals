@@ -117,18 +117,17 @@ def days_in_month(year, month):
 
 def date_plus(year, month, day, days):
     days_left = days_in_month(year,month) - day
-    if days_left < days:
-        days -= days_left                               # set day
-        (year, month) = next_month(year, month)         # month++ and year++
-        days_this_month = days_in_month(year, month)    # new left days
-
-        while days_this_month < days:
-            days -= days_this_month
-            (year, month) = next_month(year, month)
-            days_this_month = days_in_month(year,month)
-        return (year, month, days)
+    if days <= days_left:
+        return (year, month, day+days)
     else:
-        return (year, month, day + days)
+        day = days - days_left
+        year, month = next_month(year, month)
+
+        while days_in_month(year, month) < day:
+            day -= days_in_month(year, month)
+            year, month = next_month(year, month)
+
+        return (year, month, day)
 
 # print(date_plus(2017,4,20,2)) # => (2017, 4, 22)
 # print(date_plus(2017,4,20,7)) # => (2017, 4, 27)
@@ -276,6 +275,14 @@ def drop_before(s,index):
 #         return s
 #     else:
 #         return take_before(s[:index], index+1)
+
+# def take_before(s,index):
+#     if s != [] and index < len(s):
+#         return take_before(s[:index], index+1)
+#     else:
+#         return s
+
+
 # def take_before(s,index):
 #     if s != [] and index > 0:
 #         return [s[0]] + take_before(s[1:],index-1)
@@ -321,6 +328,7 @@ def sublist(s,low,high):
     if high < 0: high = 0
     if low <= high:
         return take_before(drop_before(s, low), high-low)
+        # return drop_before(take_before(s,high), low)
     else:
         return []
 # s = [1,2,3,4,5]
@@ -403,6 +411,37 @@ def longest_streak2(s):
         index += 1
 
     return res
+# def longest_streak2(s):
+#     contender = s[0]
+#     streak_length = streak_record = 1
+#     i=0
+#     for n in s[1:]:
+#         if n == contender:
+#             streak_length += 1
+#         else:
+#             contender = n
+#             streak_length = 1
+#         if streak_length > streak_record:
+#             streak_record = streak_length
+#         i += 1
+# 
+#     start = 0
+#     i = 0
+#     res = []
+#     for n in s[1:]:
+#         if n == contender:
+#             if streak_length == 1:
+#                 start = i
+#             streak_length += 1
+#         else:
+#             contender = n
+#             streak_length = 1
+#         if streak_length == streak_record:
+#             res.append((contender, streak_length, start))
+#         i += 1
+# 
+#     return res
+
 
 def test_longest_streak(s):
     for n in s:
