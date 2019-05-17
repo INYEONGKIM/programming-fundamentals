@@ -73,7 +73,6 @@ def hit(deck):
         deck = fresh_deck()
     return (deck[0], deck[1:])
 
-
 def count_score(cards):
     score = 0
     number_of_ace = 0
