@@ -1,5 +1,4 @@
 import random
-import copy
 
 C_END = "\033[0m"
 C_BOLD = "\033[1m"
@@ -16,23 +15,117 @@ class chessPieces:
         self.value = value
         self.team = team
 
-
 def initBoard():
     # K = king, M = mine, S = space
-    # 공백은 team = none
     mainBoard = []
     computerPieces = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "K", "M", "M", "M", "S", "S", "S", "S"]
     playerPieces = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "K", "M", "M", "M", "S", "S", "S", "S"]
 
     random.shuffle(computerPieces)
-    s = "";
+    s = ""
     isRandom = False
     while not (s == "Y" or s == "y" or s == "N" or s == "n"):
         s = input("말 배치를 무작위로 하시겠습니까?(y/n) : ")
 
     if s == "Y" or s == "y":
-        random.shuffle(playerPieces)
         isRandom = True
+
+    # 말 배치 사용자 임의 지정
+    else:
+        # INYEONG
+        personalList = []
+        possibleList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "K", "M", "M", "M", "S", "S", "S", "S"]
+        print(C_BOLD + C_CYAN + "[SYSTEM] : 원하는 다음과 같은 형식에 맞추어 입력해 주세요! 왕 : K, 지뢰 : M, 공백 : S, 그 외 말 : 숫자")
+        print("     예시 : 1 2 3 S K 10"+ C_END)
+
+        quitFlag = False
+        for k in range(3):
+            while True:
+                if quitFlag:
+                    break
+                print("\n입력 가능한 말 목록 ", possibleList)
+                print(C_BOLD + C_YELLOW + "[SYSTEM] : ", end="")
+                if k==0:
+                    print("가장 전방에 ", end="")
+                elif k==1:
+                    print("가운대 줄에 ", end="")
+                else:
+                    print("마지막 줄에 ", end="")
+                print("배치할 말 6개를 입력해 주세요! (갑자기 귀찮아 졌다면 : q, 무작위 배치됩니다.) " + C_END, end="")
+                rawData = input().strip().upper()
+
+                if rawData == "Q":
+                    isRandom = True
+                    quitFlag = True
+                    break
+
+                rawSplit = rawData.split()
+                if len(rawSplit) == 6:
+                    numberTemp = []
+                    strTemp = []
+                    mCnt = 0
+                    sCnt = 0
+                    kCnt = 0
+
+                    tmCnt = 0
+                    tsCnt = 0
+                    tkCnt = 0
+                    for i in possibleList:
+                        if i=="S":
+                            sCnt+=1
+                        elif i=="M":
+                            mCnt+=1
+                        elif i=="K":
+                            kCnt+=1
+
+                    breakFlag = False
+                    for i in rawSplit:
+                        if i=="K" or i=="S" or i=="M" or (len(i)==2 and i=="10") or (len(i) == 1 and 1 <= ord(i)-ord('0') <= 9):
+                            if i!="K" and i!="S" and i!="M":
+                                i = int(i)
+                                if i not in possibleList:
+                                    print("[SYSTEM] : 해당 숫자는 이미 사용했습니다! [ERROR] : " + str(i))
+                                    break
+                                else:
+                                    numberTemp.append(i)
+                            else:
+                                if i=="S":
+                                    tsCnt+=1
+                                elif i=="M":
+                                    tmCnt+=1
+                                elif i=="K":
+                                    tkCnt+=1
+                                strTemp.append(i)
+                        else:
+                            print("[SYSTEM] : 올바르지 않은 입력이 있습니다! [ERROR] : " + i)
+                            breakFlag = True
+                            break
+
+                    numberTempSet = set(numberTemp)
+                    if len(numberTempSet) + len(strTemp) != 6:  # found duplicate
+                        if not breakFlag:
+                            print("[SYSTEM] : 같은 숫자를 여러번 사용할 수 없습니다!")
+                        continue
+                    elif tsCnt > sCnt:
+                        print("[SYSTEM] : 너무 많은 공백을 배치했습니다!")
+                        continue
+                    elif tmCnt > mCnt:
+                        print("[SYSTEM] : 너무 많은 지뢰를 배치했습니다!")
+                        continue
+                    elif tkCnt > kCnt:
+                        print("[SYSTEM] : 너무 많은 왕을 배치했습니다!")
+                        continue
+                    else:
+                        # success
+                        for i in rawSplit:
+                            if i != "K" and i != "S" and i != "M":
+                                i = int(i)
+                            personalList.append(i)
+                            possibleList.remove(i)
+                        print(C_BOLD + C_RED + "[SYSTEM] : 한 줄 추가를 완료했습니다!" + C_END)
+                        break
+                else:
+                    print("[SYSTEM] : 6개를 올바르게 입력하지 않았습니다!")
 
     for i in range(9):
         # computer pieces setting
@@ -53,6 +146,7 @@ def initBoard():
         # player pieces setting
         else:
             if isRandom:
+                random.shuffle(playerPieces)
                 mainBoard.append([])
                 for j in range(6):
                     temp, playerPieces = playerPieces[0], playerPieces[1:]
@@ -61,8 +155,14 @@ def initBoard():
                     else:
                         mainBoard[i].append(chessPieces(True, temp, "none"))
             else:
-                # 일단 사용자 입력방식 보류, 안섞을 경우 전부 공백
-                mainBoard.append([chessPieces(True, "S", "none")] * 6)
+                # 사용자 정의 배치
+                mainBoard.append([])
+                for j in range(6):
+                    temp, personalList = personalList[0], personalList[1:]
+                    if temp != "S":
+                        mainBoard[i].append(chessPieces(True, temp, "Player"))
+                    else:
+                        mainBoard[i].append(chessPieces(True, temp, "none"))
 
     return mainBoard
 
@@ -144,74 +244,16 @@ def isNumber(s):
     except ValueError:
         return False
 
-def playerRevive(board, playerLeftPieces, direction, x, y):
-    playerPieces = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "K", "M", "M", "M"]
-    temp_playerLeftPieces = copy.deepcopy(playerLeftPieces)
-
-    while True:  # player 죽은말 찾기
-        c = temp_playerLeftPieces[0]
-        temp_playerLeftPieces.remove(c)
-        playerDaedPieces = playerPieces.remove(c)
-        if (len(temp_playerLeftPieces) == 0):
-            break
-
-    # 부활조건 맞으면 죽은 말들 중에 부활할 말 찾기
-    if ((direction == 'q' or direction == 'w' or direction == 'e') and x + 1 == 1):
-        if (board[x][y].team == "Player" and board[x][y].value != "K"):
-            while True:
-                revivePin = random.choice(playerDaedPieces)
-                if (revivePin == "M"):
-                    continue
-                else:
-                    # player 진영에 부활할 자리 있나 판별, 있으면 y좌표 저장
-                    sub_y = []
-                    for i in range(6):
-                        if (board[0][i].value == "S"):
-                            sub_y.append(i)
-
-                    # 자리 없으면 아무것도 안하고, 있으면 부활
-                    if (len(sub_y) == 0):
-                        return board, playerLeftPieces
-                    else:
-                        print("부.활.시.작")
-                        temp_y = random.choice(sub_y)
-                        board[0][temp_y] = chessPieces(True, revivePin, "Player")
-                        playerLeftPieces.append(revivePin)
-                        return board, playerLeftPieces
-
-    if (direction == 'ww' and x + 2 == 2):
-        if (board[x][y].team == "Player" and board[x][y].value != "K"):
-            while True:
-                revivePin = random.choice(playerDaedPieces)
-                if (revivePin == "M"):
-                    continue
-                else:
-                    # 컴퓨터 진영에 부활할 자리 있나 판별, 있으면 y좌표 저장
-                    sub_y = []
-                    for i in range(6):
-                        if (board[0][i].value == "S"):
-                            sub_y.append(i)
-
-                    # 자리 없으면 아무것도 안하고, 있으면 부활
-                    if (len(sub_y) == 0):
-                        return board, playerLeftPieces
-                    else:
-                        print("부.활.시.작")
-                        temp_y = random.choice(sub_y)
-                        board[0][temp_y] = chessPieces(True, revivePin, "Computer")
-                        playerLeftPieces.append(revivePin)
-                        return board, playerLeftPieces
-
 # player part
 def playerPart(board, playerLeftPieces, computerLeftPieces):
     print("Player 차례")
-    l = ['a', 'q', 'w', 'ww', 'e', 'd'];
+    l = ['a', 'q', 'w', 'ww', 'e', 'd']
     x = 100
     y = 100
     # 움직일 말 선택
     while True:
         while True:
-            marker = input("말을 선택 하세요(왕은 K 입력) ")
+            marker = input("말을 선택 하세요(왕은 K 입력) ").upper()
             if marker == 'K':
                 break
             elif isNumber(marker):
@@ -274,23 +316,59 @@ def playerPart(board, playerLeftPieces, computerLeftPieces):
                 continue
         except IndexError:
             print("다시 선택해 주세요")
-    # 움직인후 원래 자리 빈공간으로
 
     # Player Battle
     board, playerLeftPieces, computerLeftPieces = playerBattle(board, playerLeftPieces, computerLeftPieces, x, y, board[x][y].value)
 
     # Player revive
-    # 부활 만들어야 함
+    # BAEK
+    if (x + 1 == 1 and (direction == "e" or direction == "q" or direction == "w")) or (
+            x + 2 == 2 and (direction == "ww")):  # reach end
+        rescuablePieces = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        for i in playerLeftPieces:  # set possible pieces
+            if type(i) == int:
+                rescuablePieces.remove(i)
+        if rescuablePieces == []:
+            print("[SYSTEM] : 부활에 실패했습니다. 살릴 수 있는 말이 없습니다.")
+        else:
+            possibleIndex = [0, 1, 2, 3, 4, 5]
+            for i in range(6):
+                if board[8][i].value != "S":  # Player 0번줄의 공백여부 판단
+                    possibleIndex.remove(i)
+            if possibleIndex == []:
+                print("[SYSTEM] : 부활에 실패했습니다. Player의 첫 번째 줄이 가득찼습니다.")
+            else:
+                while True:
+                    try:
+                        revive_pin = int(input("[SYSTEM] : 부활시킬 말을 입력하세요 : "))
+                        if (type(rescuablePieces.index(revive_pin)) == int):
+                            break
+                    except ValueError :
+                        print("[SYSTEM] : 살릴 수 있는 말이 아닙니다.")
+                        continue
 
+                while True:
+                    try:
+                        revive_point = int(input("[SYSTEM] : 부활할 자리의 y좌표를 입력하세요 : "))
+                        if (type(possibleIndex.index(revive_point)) == int):
+                            break
+                    except ValueError :
+                        print("[SYSTEM] : 자리에 뭔가 있습니다! ")
+                        continue
+                print("[SYSTME] : 영웅은 죽지 않아요! (0, " + str(revive_point) + ")에 " + str(
+                    revive_pin) + "이/가 부활했습니다!")
+                board[8][revive_point] = chessPieces(True, revive_pin, "Player")
+                playerLeftPieces.append(revive_pin)
 
     return board, playerLeftPieces, computerLeftPieces
+
 
 # INYEONG
 def playerBattle(board, playerLeftPieces, computerLeftPieces, x, y, myValue):
     survive = True
 
     if myValue == "K":  # 왕인경우
-        if (x > 1 and (board[x - 1][y].team == "Computer")):  # 정면에서
+        if (x > 0 and (board[x - 1][y].team == "Computer")):  # 정면에서
             if (board[x - 1][y].value == "K"):  # 왕만나면
                 board[x][y].visible = True
                 board[x - 1][y].visible = True
@@ -324,7 +402,7 @@ def playerBattle(board, playerLeftPieces, computerLeftPieces, x, y, myValue):
                 print("[Player] : (R)Player의 왕이 죽었습니다!")
     else:
         # front enemy
-        if x > 1 and board[x - 1][y].team == "Computer":
+        if x > 0 and board[x - 1][y].team == "Computer":
             if type(board[x - 1][y].value) == str:
                 if board[x - 1][y].value == "K":  # king
                     board[x - 1][y] = chessPieces(True, "S", "none")
@@ -419,7 +497,7 @@ def playerBattle(board, playerLeftPieces, computerLeftPieces, x, y, myValue):
                         board[x][y-1].visible = True
                         print("(L)lose, CPU가 이겼습니다.")
 
-                else:
+                else: # normal
                     if myValue + board[x][y - 1].value >= 10:
                         print("[Player] : 두 수의 합이 10보다 크거나 같습니다. ", end="")
                         if myValue > board[x][y - 1].value:  # win
@@ -915,23 +993,26 @@ def computerBattle(board, playerLeftPieces, computerLeftPieces, x, y, myValue):
 
 
 def numberKoreanChess():
-    board = initBoard()  # main board
-    playerLeftPieces = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "K", "M", "M", "M"]
-    computerLeftPieces = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "K", "M", "M", "M"]
-    s = ""
-    startFirst = True
-    while not (s == "Y" or s == "y" or s == "N" or s == "n"):
-        s = input("먼저 시작하시겠습니까?(y/n) : ")
-
-    if s == "n" or s == "N":
-        startFirst = False
 
     print("\n************** 숫자 장기 승리조건 **************")
     print(" 1. 상대편 왕을 잡은경우")
     print(" 2. 상대편 왕빼고 모든 말을 잡은경우(지뢰포함)")
     print(" 3. 왕이 상대편 진영끝에 도달한 경우")
+    # print(" 4. 60초이내 안움직인 경우")  # playerPart 내부에서 처리
     print("\n Game referrence : 더 지니어스(그랜드 파이널)")
-    print("***********************************************\n")
+    print("*********************************************\n")
+
+    board = initBoard()  # main board
+    playerLeftPieces = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "K", "M", "M", "M"]
+    computerLeftPieces = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "K", "M", "M", "M"]
+    s = ""
+    startFirst = True
+
+    while not (s == "Y" or s == "y" or s == "N" or s == "n"):
+        s = input("먼저 시작하시겠습니까?(y/n) : ")
+
+    if s == "n" or s == "N":
+        startFirst = False
 
     printBorad(board, playerLeftPieces, computerLeftPieces)
 
@@ -948,28 +1029,25 @@ def numberKoreanChess():
             if stat: break
 
             board, playerLeftPieces, computerLeftPieces = computerPart(board, playerLeftPieces, computerLeftPieces)
-
-            # check list condition (종료조건 1, 2)
             stat, winner = checkEndListCondition(playerLeftPieces, computerLeftPieces)
             if not stat:
-                # check board condition (종료조건 3)
                 stat, winner = checkEndBoardCondition(board)
 
             if stat: break
 
         else:
             board, playerLeftPieces, computerLeftPieces = computerPart(board, playerLeftPieces, computerLeftPieces)
-
             stat, winner = checkEndListCondition(playerLeftPieces, computerLeftPieces)
             if not stat:
                 stat, winner = checkEndBoardCondition(board)
+
             if stat: break
 
             board, playerLeftPieces, computerLeftPieces = playerPart(board, playerLeftPieces, computerLeftPieces)
             stat, winner = checkEndListCondition(playerLeftPieces, computerLeftPieces)
-
             if not stat:
                 stat, winner = checkEndBoardCondition(board)
+
             if stat: break
 
         print()
@@ -990,7 +1068,7 @@ def numberKoreanChess():
             board[i][j].visible = True
 
     printBorad(board, playerLeftPieces, computerLeftPieces)
-    print("[SYSTEM] : Winner is", winner)
+    print(C_BOLD + C_YELLOW + "\n[SYSTEM] : Winner is " + winner + C_END)
     print(C_BOLD + C_CYAN + "\n\nMade by Team 없음(9조, 백승헌, 하민수, 김인영)" + C_END)
 
 
