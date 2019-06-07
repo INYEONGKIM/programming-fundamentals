@@ -15,4 +15,3 @@
     python numberKoreanChess.py
     
 </code></pre>
-
