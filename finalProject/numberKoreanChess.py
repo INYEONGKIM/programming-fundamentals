@@ -1,6 +1,7 @@
 # Programming Fundamentals (CSE1017)
 # Final Project : make board game
 # Project Name : Number Korean Chess(숫자장기), game reference : 더 지니어스(그랜드파이널)
+# Execute : python numberKoreanChess.py
 # Last Modified : 2019. 6. 9.
 
 import random
@@ -216,7 +217,7 @@ def checkEndCondition(player, computer, board):
         return True, "Player"
 
     # 왕 빼고 모든 말이 죽은 경우
-    endConditionSet = {"K","M"}
+    endConditionSet = {"K", "M"}
     playerSet = set(player)
     computerSet = set(computer)
 
@@ -361,7 +362,6 @@ def playerPart(board, playerLeftPieces, computerLeftPieces):
                     playerLeftPieces.append(revive_pin)
 
     return board, playerLeftPieces, computerLeftPieces
-
 
 # INYEONG
 def playerBattle(board, playerLeftPieces, computerLeftPieces, x, y, myValue):
@@ -631,7 +631,6 @@ def playerBattle(board, playerLeftPieces, computerLeftPieces, x, y, myValue):
     return board, playerLeftPieces, computerLeftPieces
 
 def computerPart(board, playerLeftPieces, computerLeftPieces):  # BEAK
-
     systemMsg = "[SYSTEM] : CPU가 "
     l = [1, 4, 5, 6, 3, 8]
     x = 100
@@ -705,6 +704,7 @@ def computerPart(board, playerLeftPieces, computerLeftPieces):  # BEAK
     systemMsg += "(" + str(x) + "," + str(y) + ")로 움직였습니다."
     print(systemMsg)
 
+    # computer battle
     board, playerLeftPieces, computerLeftPieces = computerBattle(board, playerLeftPieces, computerLeftPieces, x, y, board[x][y].value)
 
     # computer revive
@@ -728,8 +728,7 @@ def computerPart(board, playerLeftPieces, computerLeftPieces):  # BEAK
                 else:
                     random.shuffle(rescuablePieces)
                     random.shuffle(possibleIndex)
-                    print("[SYSTME] : 영웅은 죽지 않아요! (0, " + str(possibleIndex[0]) + ")에 " + str(
-                        rescuablePieces[0]) + " 이/가 부활했습니다!")
+                    print("[SYSTME] : 영웅은 죽지 않아요! (0, " + str(possibleIndex[0]) + ")에 " + str(rescuablePieces[0]) + " 이/가 부활했습니다!")
                     board[0][possibleIndex[0]] = chessPieces(True, rescuablePieces[0], "Computer")
                     computerLeftPieces.append(rescuablePieces[0])
 
