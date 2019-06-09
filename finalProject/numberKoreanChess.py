@@ -1,3 +1,8 @@
+# Programming Fundamentals (CSE1017)
+# Final Project : make board game
+# Project Name : Number Korean Chess(숫자장기), game reference : 더 지니어스(그랜드파이널)
+# Last Modified : 2019. 6. 9.
+
 import random
 
 C_END = "\033[0m"
