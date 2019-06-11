@@ -2,7 +2,7 @@
 # Final Project : make board game
 # Project Name : Number Korean Chess(숫자장기), game reference : 더 지니어스(그랜드파이널)
 # Execute : python numberKoreanChess.py
-# Last Modified : 2019. 6. 9.
+# Last Modified : 2019. 6. 11.
 
 import random
 
