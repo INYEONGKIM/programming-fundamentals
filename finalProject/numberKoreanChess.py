@@ -71,8 +71,8 @@ def initBoard():
                     numberTemp = []
                     strTemp = []
                     mCnt = 0; sCnt = 0; kCnt = 0
-
                     tmCnt = 0; tsCnt = 0; tkCnt = 0
+
                     for i in possibleList:
                         if i=="S":
                             sCnt+=1
@@ -603,7 +603,7 @@ def playerBattle(board, playerLeftPieces, computerLeftPieces, x, y, myValue):
                             board[x][y + 1].visible = True
                             print("(R)lose, CPU가 이겼습니다.")
                     else:
-                        print("[CPU] : 두 수의 합이 10보다 작습니다. ", end="")
+                        print("[Player] : 두 수의 합이 10보다 작습니다. ", end="")
                         if myValue < board[x][y + 1].value:  # win
                             print(str(myValue) + " < " + str(board[x][y + 1].value) + " ", end="")
                             computerLeftPieces.remove(board[x][y + 1].value)
