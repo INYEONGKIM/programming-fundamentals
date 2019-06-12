@@ -10,7 +10,7 @@
 2. 왕과 지뢰를 제외한 상대방의 모든 말을 잡은 경우
 3. 내 왕이 상대편 진영 끝에 도달할 경우
 
-##Execute
+## Execute
 <pre><code>
     python numberKoreanChess.py
     
