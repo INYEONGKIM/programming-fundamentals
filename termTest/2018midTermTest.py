@@ -1,9 +1,16 @@
 # 1 9의 보수 구하기
+# def complement9(n):
+#     s = str(n)
+#     ans = ""
+#     for c in s:
+#         ans += str(9-(ord(c)-ord('0')))
+#     return int(ans)
+
 def complement9(n):  # 자연수라고 가정
     s = str(n)
     ans = ""
     for c in s:
-        ans += str(9-(ord(c)-ord('0')))
+        ans += str(9-int(c))
     return int(ans)
 
 print(complement9(0)) # 9
@@ -48,7 +55,6 @@ def count_upto(n):
         ns.append(n)
         n-=1
     return ns
-
 
 print(count_upto(0)) # [0]
 print(count_upto(5)) # [0, 1, 2, 3, 4, 5]
@@ -104,7 +110,6 @@ def makeset(xs):
             ys.append(x)
     return ys
 
-
 import random
 
 s1 = makeset([random.randrange(10) for _ in range(10)])
@@ -113,7 +118,13 @@ s2 = makeset([random.randrange(10) for _ in range(10)])
 print(s2)
 
 def union(xs,ys):
-    return list(set(xs+ys))
+    zs = []
+    for x in xs:
+        if x not in ys:
+            zs.append(x)
+    return zs+ys
+# def union(xs,ys):
+#     return list(set(xs+ys))
 
 print(union(s1, s2))
 print(union([3,2,4],[1,2,3]))

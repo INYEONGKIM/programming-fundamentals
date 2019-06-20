@@ -107,17 +107,29 @@ def ascii_art_diamond(n):
 # print(ascii_art_diamond(7))
 
 # 4
-def substrings_of_length(length,s):
-    if length == 0: return ['']
-    if len(s)<length: return None
-    res=[]
-    start = 0
-    end = start+length
-    while end<=len(s):
-        res.append(s[start:end])
-        start+=1
-        end = start+length
-    return res
+# def substrings_of_length(length,s):
+#     if length == 0: return ['']
+#     if len(s)<length: return None
+#     res=[]
+#     start = 0
+#     end = start+length
+#     while end<=len(s):
+#         res.append(s[start:end])
+#         start+=1
+#         end = start+length
+#     return res
+
+def substrings_of_length(k,s):
+    if k > len(s):
+        return None
+    if k==0:
+        return ['']
+    else:
+        r=[]
+        for i in range(len(s)):
+            if len(s[i:k+i]) == k:
+                r.append(s[i:k+i])
+        return r
 # print(substrings_of_length(0,"ERICA"))
 # print(substrings_of_length(1,"ERICA"))
 # print(substrings_of_length(2,"ERICA"))
